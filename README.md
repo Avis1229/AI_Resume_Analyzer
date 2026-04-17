@@ -13,6 +13,27 @@ The main purpose of this project is to:
 - calculate a basic resume writing score
 - store analyzed data in a MySQL database
 
+## AI/ML Basis Of The Project
+
+This project is not based on a full trained machine learning prediction pipeline.
+
+Instead, it is mainly based on:
+
+- NLP-based resume parsing using `spaCy`
+- rule-based text extraction using `regex`
+- PDF text extraction using `pdfminer3`
+- keyword-based skill matching
+- rule-based domain prediction from detected skills
+- heuristic resume scoring based on important resume sections
+
+In simple words, this project is an AI-assisted resume analysis system with light NLP support, not a deep learning or advanced ML model.
+
+If viewed from an AI/ML perspective:
+
+- `AI` part: text understanding, entity extraction, skill detection, and recommendation logic
+- `ML/NLP` part: `spaCy` model for person-name recognition
+- `Rule-based` part: field detection, scoring, fallback extraction, and recommendations
+
 ## Technologies Used
 
 ### 1. `Streamlit`

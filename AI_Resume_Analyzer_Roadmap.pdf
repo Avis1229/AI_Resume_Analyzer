@@ -12,7 +12,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 3169 >>
+<< /Length 3866 >>
 stream
 BT
 /F1 12 Tf
@@ -29,7 +29,31 @@ BT
 0 -16 Td
 () Tj
 0 -16 Td
-(2. Main Files) Tj
+(2. AI/ML Basis Of The Project) Tj
+0 -16 Td
+(This project is not based on a full trained machine learning prediction pipeline.) Tj
+0 -16 Td
+(It mainly combines NLP support with rule-based resume analysis.) Tj
+0 -16 Td
+(Core basis:) Tj
+0 -16 Td
+(spaCy for person-name recognition.) Tj
+0 -16 Td
+(Regex for email, phone, and fallback skill extraction.) Tj
+0 -16 Td
+(pdfminer3 for PDF text extraction.) Tj
+0 -16 Td
+(Keyword-based skill matching.) Tj
+0 -16 Td
+(Rule-based domain prediction from detected skills.) Tj
+0 -16 Td
+(Heuristic resume scoring using resume sections.) Tj
+0 -16 Td
+(In simple terms, it is an AI-assisted resume analysis project with light NLP support.) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(3. Main Files) Tj
 0 -16 Td
 (App.py - Main Streamlit application and UI flow.) Tj
 0 -16 Td
@@ -43,7 +67,7 @@ BT
 0 -16 Td
 () Tj
 0 -16 Td
-(3. Technologies Used) Tj
+(4. Technologies Used) Tj
 0 -16 Td
 (Streamlit - Used to build the user interface.) Tj
 0 -16 Td
@@ -63,7 +87,7 @@ BT
 0 -16 Td
 () Tj
 0 -16 Td
-(4. User Flow) Tj
+(5. User Flow) Tj
 0 -16 Td
 (Step 1: The user opens the app.) Tj
 0 -16 Td
@@ -87,7 +111,7 @@ BT
 0 -16 Td
 () Tj
 0 -16 Td
-(5. Current Issues) Tj
+(6. Current Issues) Tj
 0 -16 Td
 (Database credentials are hardcoded.) Tj
 0 -16 Td
@@ -101,7 +125,7 @@ BT
 0 -16 Td
 () Tj
 0 -16 Td
-(6. Roadmap) Tj
+(7. Roadmap) Tj
 0 -16 Td
 (Phase 1: Cleanup) Tj
 0 -16 Td
@@ -133,7 +157,7 @@ BT
 0 -16 Td
 () Tj
 0 -16 Td
-(7. Run Steps) Tj
+(8. Run Steps) Tj
 0 -16 Td
 (1. Activate the virtual environment.) Tj
 0 -16 Td
@@ -158,5 +182,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-3532
+4229
 %%EOF
