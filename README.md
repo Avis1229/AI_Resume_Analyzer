@@ -1,165 +1,150 @@
 # AI Resume Analyzer
 
-AI Resume Analyzer ek Streamlit based project hai jo PDF resume upload karke usme se basic information nikalta hai, skills identify karta hai, job field suggest karta hai, courses recommend karta hai, resume score deta hai, aur admin panel me user data show karta hai.
+AI Resume Analyzer is a Streamlit-based project that analyzes PDF resumes, extracts key details, identifies likely career domains, recommends courses and skills, and calculates a simple resume score.
 
-## Project Ka Simple Goal
+## Project Goal
 
-Is project ka main purpose hai:
+The main purpose of this project is to:
 
-- resume upload karna
-- resume se `name`, `email`, `phone`, `skills`, `pages` nikalna
-- candidate ka likely field batana
-- useful courses recommend karna
-- resume writing score dikhana
-- admin side par stored data dekhna
+- upload a resume in PDF format
+- extract `name`, `email`, `phone`, `skills`, and `page count`
+- identify the likely job domain of the candidate
+- recommend useful skills and courses
+- calculate a basic resume writing score
+- store analyzed data in a MySQL database
 
-## Project Me Kya Kya Use Hua Hai
+## Technologies Used
 
 ### 1. `Streamlit`
 
-Frontend UI banane ke liye use hua hai.
+Used to build the user interface.
 
-Isse ye cheezein bani hain:
+It powers:
 
 - file upload
-- buttons and sidebar
+- sidebar controls
 - resume analysis output
-- progress bar
+- progress bars
 - admin dashboard
 
 ### 2. `pdfminer3`
 
-PDF resume ka text read karne ke liye use hua hai.
-
-Ye resume ke andar ka raw text nikalta hai jisse aage analysis hota hai.
+Used to read and extract raw text from PDF resumes.
 
 ### 3. `spaCy`
 
-Name detection ke liye use hua hai.
-
-Project `en_core_web_sm` model se person name identify karne ki koshish karta hai.
+Used for name detection through the `en_core_web_sm` model.
 
 ### 4. `Regex`
 
-Regex ka use email, phone number aur manual skill extraction ke liye hua hai.
+Used to extract email addresses, phone numbers, and fallback skills manually.
 
 ### 5. `pymysql`
 
-MySQL database se connect karne ke liye use hua hai.
-
-Database me user ka analyzed data store hota hai.
+Used to connect the app with a MySQL database.
 
 ### 6. `streamlit-tags`
 
-Skills ko tag format me dikhane ke liye use hua hai.
+Used to display skills in tag format.
 
 ### 7. `plotly`
 
-Admin dashboard me charts dikhane ke liye use hua hai.
+Used for charts and analytics in the admin section.
 
 ### 8. `Pillow`
 
-Logo image load karne ke liye use hua hai.
+Used to load and display the project logo.
 
 ### 9. `Courses.py`
 
-Is file me different domains ke recommended courses aur videos ka data hai.
+Stores course recommendations and video links for different career domains.
 
 ## Folder Structure
 
 ```text
 AI_Resume_Analyzer/
-├── App.py
-├── resume_parser_custom.py
-├── Courses.py
-├── requirements.txt
-├── README.md
-├── .gitignore
-├── Logo/
-└── Uploaded_Resumes/
+|-- App.py
+|-- resume_parser_custom.py
+|-- Courses.py
+|-- requirements.txt
+|-- README.md
+|-- .gitignore
+|-- AI_Resume_Analyzer_Roadmap.pdf
+|-- Logo/
+`-- Uploaded_Resumes/
 ```
 
-## Important Files Samjho
+## Important Files
 
 ### `App.py`
 
-Ye main application file hai.
+This is the main application file.
 
-Is file me:
+It contains:
 
-- Streamlit UI hai
-- PDF upload logic hai
-- resume analysis flow hai
-- recommendation logic hai
-- resume score logic hai
-- admin panel hai
-- MySQL insert logic hai
+- Streamlit UI
+- PDF upload logic
+- resume analysis flow
+- recommendation logic
+- resume scoring
+- admin dashboard
+- MySQL insert logic
 
 ### `resume_parser_custom.py`
 
-Ye custom parser file hai.
+This is the custom parsing module.
 
-Isme:
+It handles:
 
 - PDF text extraction
-- page count
+- page counting
 - name extraction
 - email extraction
-- phone extraction
+- phone number extraction
 - skills extraction
 
 ### `Courses.py`
 
-Is file me different career categories ke liye:
+This file contains:
 
-- courses
-- resume videos
-- interview videos
-
-store kiye gaye hain.
+- recommended courses
+- resume improvement videos
+- interview preparation videos
 
 ### `requirements.txt`
 
-Project ke Python packages is file me listed hain.
+Lists the Python packages required for this project.
 
-## Resume Analysis Ka Flow
+## Resume Analysis Flow
 
-1. User Streamlit app open karta hai.
-2. User PDF resume upload karta hai.
-3. Resume `Uploaded_Resumes/` folder me save hota hai.
-4. `pdfminer3` PDF ka text extract karta hai.
-5. `resume_parser_custom.py` name, email, phone, skills, pages nikalta hai.
-6. `App.py` safety checks laga kar missing data ko improve karta hai.
-7. Skills ke basis par field detect hota hai:
+1. The user opens the Streamlit app.
+2. The user uploads a PDF resume.
+3. The resume is saved inside the `Uploaded_Resumes/` folder.
+4. `pdfminer3` extracts the text from the PDF.
+5. `resume_parser_custom.py` extracts name, email, phone, skills, and page count.
+6. `App.py` applies safety checks to improve weak or missing parser output.
+7. The app predicts a likely field based on detected skills:
    - Data Science
    - Web Development
    - Android Development
    - iOS Development
    - UI/UX Development
-8. Matching field ke hisaab se recommended skills aur courses dikhte hain.
-9. Resume ke sections check hote hain:
+8. Recommended skills and courses are shown based on the detected field.
+9. The resume is checked for important sections such as:
    - Objective
    - Declaration
    - Hobbies
    - Achievements
    - Projects
-10. Resume score calculate hota hai.
-11. Result UI me show hota hai.
-12. Data MySQL database me save hota hai.
+10. A resume score is calculated.
+11. The final result is displayed in the UI.
+12. The analyzed data can be stored in MySQL.
 
-## Admin Flow
+## Database Information
 
-Admin login ke baad:
+This project uses MySQL.
 
-- stored user data table me dikhta hai
-- CSV export possible hai
-- pie charts show hote hain
-
-## Database Info
-
-Project MySQL use karta hai.
-
-Current code ke hisaab se connection:
+The current connection settings in code are:
 
 ```python
 host='localhost'
@@ -172,9 +157,9 @@ Table name:
 
 - `user_data`
 
-## Run Karne Ka Simple Tarika
+## How To Run
 
-### 1. Virtual environment activate karo
+### 1. Activate the virtual environment
 
 PowerShell:
 
@@ -182,7 +167,7 @@ PowerShell:
 .\.venv\Scripts\Activate.ps1
 ```
 
-### 2. Packages install karo
+### 2. Install dependencies
 
 ```powershell
 pip install -r requirements.txt
@@ -191,15 +176,15 @@ pip install spacy==2.3.5
 python -m spacy download en_core_web_sm
 ```
 
-### 3. MySQL start karo
+### 3. Start MySQL
 
-Ensure karo ki:
+Make sure:
 
-- MySQL server chal raha ho
-- `cv` database accessible ho
-- given username/password valid ho
+- the MySQL server is running
+- the `cv` database is accessible
+- the configured username and password are valid
 
-### 4. Streamlit app run karo
+### 4. Run the Streamlit app
 
 ```powershell
 .\.venv\Scripts\python.exe -m streamlit run App.py
@@ -207,67 +192,65 @@ Ensure karo ki:
 
 ## Current Limitations
 
-- DB credentials code ke andar hardcoded hain
-- admin username/password hardcoded hai
-- uploaded resumes project folder me save hote hain
-- `nltk.download('stopwords')` app start par run hota hai
-- kuch UI strings me encoding issue dikh sakta hai
-- score logic basic keyword check par based hai
+- Database credentials are hardcoded in the code.
+- Admin username and password are hardcoded.
+- Uploaded resumes are saved in the project folder.
+- `nltk.download('stopwords')` runs at startup.
+- Some UI strings may still have encoding issues.
+- The scoring logic is still based on basic keyword checks.
 
-## Simple Roadmap
+## Roadmap
 
 ### Phase 1. Cleanup
 
-- unused temp files remove karo
-- `README.md` maintain karo
-- `.gitignore` use karo
-- duplicate files hatao
+- remove unused temporary files
+- maintain the `README.md`
+- use `.gitignore` properly
+- remove duplicate or unnecessary files
 
 ### Phase 2. Stability
 
-- hardcoded DB credentials ko `.env` me shift karo
-- admin credentials secure karo
-- upload validation improve karo
-- error handling better karo
+- move hardcoded database credentials into an `.env` file
+- secure admin credentials
+- improve upload validation
+- improve error handling
 
 ### Phase 3. Parsing Improvement
 
-- better name detection
-- better skill extraction
-- more accurate field prediction
-- section detection ko robust banao
+- improve name detection
+- improve skill extraction
+- improve field prediction accuracy
+- make section detection more robust
 
 ### Phase 4. UI Improvement
 
 - cleaner layout
 - better score cards
 - grouped tips panel
-- mobile-friendly interface
+- better mobile responsiveness
 
 ### Phase 5. Production Readiness
 
 - deployment setup
 - logging
-- file cleanup automation
-- proper config management
+- automated file cleanup
+- proper configuration management
 
 ## Future Improvement Ideas
 
-- ATS score improvement
-- resume keyword matching against job description
-- download report as PDF
-- email notification
-- authentication for admin panel
-- better analytics
+- better ATS-style scoring
+- resume matching against job descriptions
+- downloadable PDF report
+- email notifications
+- stronger authentication for admin access
+- improved analytics
 
 ## Important Note
 
-`Uploaded_Resumes/` folder me resumes store hote hain. Ye runtime data hai, isliye is folder ko completely delete nahi kiya gaya.
+The `Uploaded_Resumes/` folder contains runtime resume files, so it was not fully deleted during cleanup.
 
-Safe garbage cleanup me generally:
+Safe garbage cleanup usually includes:
 
 - `__pycache__/`
 - `.pyc` files
-- temp files
-
-remove karne chahiye.
+- temporary files
