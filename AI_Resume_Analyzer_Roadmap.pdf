@@ -12,7 +12,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 3156 >>
+<< /Length 3169 >>
 stream
 BT
 /F1 12 Tf
@@ -23,19 +23,19 @@ BT
 0 -16 Td
 (1. Project Overview) Tj
 0 -16 Td
-(AI Resume Analyzer ek Streamlit based project hai jo PDF resume ko analyze karta hai.) Tj
+(AI Resume Analyzer is a Streamlit-based project that analyzes PDF resumes.) Tj
 0 -16 Td
-(Ye name, email, phone, skills aur pages nikalta hai, phir recommendations aur score deta hai.) Tj
+(It extracts name, email, phone, skills, and page count, then shows recommendations and a score.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (2. Main Files) Tj
 0 -16 Td
-(App.py - Main Streamlit application aur UI flow.) Tj
+(App.py - Main Streamlit application and UI flow.) Tj
 0 -16 Td
 (resume_parser_custom.py - Resume parsing logic.) Tj
 0 -16 Td
-(Courses.py - Recommended courses aur video links.) Tj
+(Courses.py - Recommended courses and video links.) Tj
 0 -16 Td
 (requirements.txt - Required Python packages.) Tj
 0 -16 Td
@@ -45,59 +45,59 @@ BT
 0 -16 Td
 (3. Technologies Used) Tj
 0 -16 Td
-(Streamlit - UI banane ke liye.) Tj
+(Streamlit - Used to build the user interface.) Tj
 0 -16 Td
-(pdfminer3 - PDF se text nikalne ke liye.) Tj
+(pdfminer3 - Used to extract text from PDF resumes.) Tj
 0 -16 Td
-(spaCy - Name detection ke liye.) Tj
+(spaCy - Used for name detection.) Tj
 0 -16 Td
-(Regex - Email, phone aur manual skills extraction ke liye.) Tj
+(Regex - Used for email, phone, and manual skill extraction.) Tj
 0 -16 Td
-(pymysql - MySQL database connection ke liye.) Tj
+(pymysql - Used for MySQL database connection.) Tj
 0 -16 Td
-(plotly - Charts aur analytics ke liye.) Tj
+(plotly - Used for charts and analytics.) Tj
 0 -16 Td
-(streamlit-tags - Skills tags dikhane ke liye.) Tj
+(streamlit-tags - Used to display skill tags.) Tj
 0 -16 Td
-(Pillow - Logo image load karne ke liye.) Tj
+(Pillow - Used to load the project logo.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (4. User Flow) Tj
 0 -16 Td
-(Step 1: User app open karta hai.) Tj
+(Step 1: The user opens the app.) Tj
 0 -16 Td
-(Step 2: PDF resume upload karta hai.) Tj
+(Step 2: The user uploads a PDF resume.) Tj
 0 -16 Td
-(Step 3: Resume Uploaded_Resumes folder me save hota hai.) Tj
+(Step 3: The resume is saved in the Uploaded_Resumes folder.) Tj
 0 -16 Td
-(Step 4: PDF text extract hota hai.) Tj
+(Step 4: Text is extracted from the PDF.) Tj
 0 -16 Td
-(Step 5: Parser basic details nikalta hai.) Tj
+(Step 5: The parser extracts the basic details.) Tj
 0 -16 Td
-(Step 6: Safety checks missing details improve karte hain.) Tj
+(Step 6: Safety checks improve missing or weak results.) Tj
 0 -16 Td
-(Step 7: Skills ke basis par job field identify hota hai.) Tj
+(Step 7: A likely job field is identified from the skills.) Tj
 0 -16 Td
-(Step 8: Courses aur recommended skills show hote hain.) Tj
+(Step 8: Recommended skills and courses are shown.) Tj
 0 -16 Td
-(Step 9: Resume score calculate hota hai.) Tj
+(Step 9: A resume score is calculated.) Tj
 0 -16 Td
-(Step 10: Data database me save ho sakta hai.) Tj
+(Step 10: The data can be stored in the database.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (5. Current Issues) Tj
 0 -16 Td
-(Database credentials hardcoded hain.) Tj
+(Database credentials are hardcoded.) Tj
 0 -16 Td
-(Admin credentials hardcoded hain.) Tj
+(Admin credentials are hardcoded.) Tj
 0 -16 Td
-(Uploaded resumes local folder me save hote hain.) Tj
+(Uploaded resumes are stored in a local folder.) Tj
 0 -16 Td
-(UI text me kuch encoding issues ho sakte hain.) Tj
+(Some UI text may still have encoding issues.) Tj
 0 -16 Td
-(Resume score logic abhi simple keyword based hai.) Tj
+(The resume score is still based on simple keyword checks.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
@@ -105,45 +105,45 @@ BT
 0 -16 Td
 (Phase 1: Cleanup) Tj
 0 -16 Td
-(Unused files remove karna, README maintain karna, .gitignore use karna.) Tj
+(Remove unused files, maintain the README, and use .gitignore properly.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (Phase 2: Stability) Tj
 0 -16 Td
-(Hardcoded credentials ko env file me shift karna, better error handling add karna.) Tj
+(Move hardcoded credentials to an env file and improve error handling.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (Phase 3: Parsing Improvement) Tj
 0 -16 Td
-(Name detection aur skill extraction ko aur accurate banana.) Tj
+(Improve name detection and make skill extraction more accurate.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (Phase 4: UI Improvement) Tj
 0 -16 Td
-(Cleaner dashboard, grouped tips panel aur better styling add karna.) Tj
+(Add a cleaner dashboard, grouped tips panel, and better styling.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (Phase 5: Production Readiness) Tj
 0 -16 Td
-(Deployment setup, logging, config management aur file cleanup automation.) Tj
+(Prepare deployment, logging, configuration management, and file cleanup automation.) Tj
 0 -16 Td
 () Tj
 0 -16 Td
 (7. Run Steps) Tj
 0 -16 Td
-(1. Virtual environment activate karo.) Tj
+(1. Activate the virtual environment.) Tj
 0 -16 Td
-(2. pip install -r requirements.txt run karo.) Tj
+(2. Run pip install -r requirements.txt.) Tj
 0 -16 Td
-(3. nltk aur spaCy model install karo.) Tj
+(3. Install nltk and the spaCy model.) Tj
 0 -16 Td
-(4. MySQL start karo.) Tj
+(4. Start MySQL.) Tj
 0 -16 Td
-(5. streamlit run App.py se app start karo.) Tj
+(5. Run the app with streamlit run App.py.) Tj
 ET
 endstream
 endobj
@@ -158,5 +158,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-3519
+3532
 %%EOF
