@@ -50,7 +50,7 @@ def fetch_yt_video(link):
         import json
         import re
         
-        # Video ID extract karein
+        # Extract the video ID
         patterns = [
             r'v=([a-zA-Z0-9_-]+)',
             r'youtu\.be/([a-zA-Z0-9_-]+)',
@@ -216,7 +216,7 @@ def run():
             resume_data = ResumeParser(save_image_path).get_extracted_data()
             resume_text = pdf_reader(save_image_path)
             
-            # 🔥 SAFETY CHECK: Agar parser fail ho toh manual extraction
+            # Safety check: use manual extraction if parser output is weak
             bad_names = ['Unknown', 'Machine Learning', 'Deep Learning', 'Data Science', 'Artificial Intelligence', '']
             
             # Name fix
@@ -249,40 +249,40 @@ def run():
                         resume_data['mobile_number'] = phones[0]
             
             # 🔥🔥🔥 SKILLS SAFETY CHECK 🔥🔥🔥
-            # Agar skills mein sirf 1-2 items hain ya "Not Specified" hai toh manually extract karein
+            # Manually extract skills if too few items are detected
             if len(resume_data['skills']) < 3 or resume_data['skills'] == ['Not Specified'] or resume_data['skills'] == ['C', 'R']:
-                st.warning("⚠️ Parser ne kam skills detect kiye. Manual extraction try kar raha hoon...")
+                st.warning("⚠️ Parser detected too few skills. Trying manual extraction...")
                 
-                # Skills section dhoondhein
+                # Search for a skills section
                 lines = resume_text.split('\n')
                 manual_skills = []
                 
                 for i, line in enumerate(lines):
                     line_lower = line.lower()
-                    # Skills section find karein
+                    # Look for the skills section
                     if any(x in line_lower for x in ['skills', 'technical skills', 'technologies']):
-                        # Agle 5 lines check karein
+                        # Check the next 5 lines
                         for j in range(1, 6):
                             if i + j < len(lines):
                                 skill_line = lines[i + j]
-                                # Comma, semicolon, ya colon se split karein
+                                # Split by comma, semicolon, colon, or pipe
                                 parts = re.split(r'[,;:\|]', skill_line)
                                 for part in parts:
                                     clean_skill = part.strip()
                                     # Minimum 2 chars, maximum 30 chars (realistic skill name)
                                     if 2 <= len(clean_skill) <= 30:
-                                        # Sirf letters, numbers, dots, plus, hash allowed
+                                        # Allow only letters, numbers, dots, plus, and hash
                                         if re.match(r'^[A-Za-z0-9\s\.\+\#\-]+$', clean_skill):
-                                            # Common fake skills exclude karein
+                                            # Exclude common filler words
                                             if clean_skill.lower() not in ['and', 'or', 'the', 'to', 'of', 'in', 'for', 'with', 'using', 'c', 'r']:
                                                 if clean_skill not in manual_skills:
                                                     manual_skills.append(clean_skill)
                 
                 if len(manual_skills) >= 3:
                     resume_data['skills'] = manual_skills
-                    st.success(f"✅ Manual extraction se {len(manual_skills)} skills mile!")
+                    st.success(f"✅ Manual extraction found {len(manual_skills)} skills.")
                 else:
-                    # Last resort: Resume text mein common skills dhoondhein
+                    # Last fallback: search the resume text for common skills
                     common_skills_list = [
                         'JavaScript', 'React', 'Node.js', 'MongoDB', 'Express', 'HTML', 'CSS',
                         'Python', 'Java', 'SQL', 'Git', 'GitHub', 'AWS', 'Docker', 'Figma',
