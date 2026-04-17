@@ -1,5 +1,3 @@
-
-
 #SET UP:
 
 # 1. INSTALL BELOW LIBRARIES
@@ -26,8 +24,9 @@ import streamlit as st
 import pandas as pd
 import base64,random
 import time,datetime
+import re  # 🔥 ADDED: Regex for safety checks
 #libraries to parse the resume pdf files
-from pyresparser import ResumeParser
+from resume_parser_custom import ResumeParser
 from pdfminer3.layout import LAParams, LTTextBox
 from pdfminer3.pdfpage import PDFPage
 from pdfminer3.pdfinterp import PDFResourceManager
@@ -38,15 +37,59 @@ from streamlit_tags import st_tags
 from PIL import Image
 import pymysql
 from Courses import ds_course,web_course,android_course,ios_course,uiux_course,resume_videos,interview_videos
-import pafy #for uploading youtube videos
+# import pafy #for uploading youtube videos
 import plotly.express as px #to create visualisations at the admin session
 import nltk
 nltk.download('stopwords')
 
 
 def fetch_yt_video(link):
-    video = pafy.new(link)
-    return video.title
+    """YouTube video title - fallback method"""
+    try:
+        import urllib.request
+        import json
+        import re
+        
+        # Video ID extract karein
+        patterns = [
+            r'v=([a-zA-Z0-9_-]+)',
+            r'youtu\.be/([a-zA-Z0-9_-]+)',
+            r'youtube\.com/embed/([a-zA-Z0-9_-]+)'
+        ]
+        
+        video_id = None
+        for pattern in patterns:
+            match = re.search(pattern, link)
+            if match:
+                video_id = match.group(1)
+                break
+        
+        if not video_id:
+            return "Resume Writing Tips"
+        
+        # Try oEmbed API
+        url = f"https://www.youtube.com/oembed?url=http://www.youtube.com/watch?v={video_id}&format=json"
+        
+        req = urllib.request.Request(
+            url, 
+            headers={'User-Agent': 'Mozilla/5.0'}
+        )
+        
+        with urllib.request.urlopen(req, timeout=5) as response:
+            data = json.loads(response.read().decode())
+            return data.get('title', 'Resume Writing Tips')
+            
+    except Exception as e:
+        print(f"Video title fetch error: {e}")
+        # Default titles
+        default_titles = {
+            "resume": "Resume Writing Tips",
+            "interview": "Interview Preparation Tips"
+        }
+        if "resume" in link.lower():
+            return default_titles["resume"]
+        else:
+            return default_titles["interview"]
 
 def get_table_download_link(df,filename,text):
     """Generates a link allowing the data in a given panda dataframe to be downloaded
@@ -132,7 +175,7 @@ def run():
     st.sidebar.markdown("# Choose User")
     activities = ["User", "Admin"]
     choice = st.sidebar.selectbox("Choose among the given options:", activities)
-    link = '[©Developed by Avi_Singh_1229p](www.linkedin.com/in/avi1229)'
+    link = '[©Developed by Avi_Singh_1229p](https://www.linkedin.com/in/avi1229)'
     st.sidebar.markdown(link, unsafe_allow_html=True)
 
 
@@ -168,11 +211,95 @@ def run():
             with open(save_image_path, "wb") as f:
                 f.write(pdf_file.getbuffer())
             show_pdf(save_image_path)
+            
+            # 🔥🔥🔥 MAIN FIX: Resume parsing with safety checks 🔥🔥🔥
             resume_data = ResumeParser(save_image_path).get_extracted_data()
+            resume_text = pdf_reader(save_image_path)
+            
+            # 🔥 SAFETY CHECK: Agar parser fail ho toh manual extraction
+            bad_names = ['Unknown', 'Machine Learning', 'Deep Learning', 'Data Science', 'Artificial Intelligence', '']
+            
+            # Name fix
+            if resume_data['name'] in bad_names:
+                lines = resume_text.replace('•', '\n').split('\n')
+                for line in lines[:10]:
+                    clean = line.strip()
+                    words = clean.split()[:2]
+                    if len(words) == 2:
+                        candidate = ' '.join(words)
+                        if re.match(r'^[A-Za-z\s]+$', candidate):
+                            if not any(bad in candidate.lower() for bad in ['machine', 'learning', 'data', 'science', 'artificial']):
+                                resume_data['name'] = candidate.title()
+                                break
+            
+            # Email fix
+            if resume_data['email'] == 'Not Found':
+                emails = re.findall(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b', resume_text)
+                if emails:
+                    resume_data['email'] = emails[0]
+            
+            # Phone fix  
+            if resume_data['mobile_number'] == 'Not Found':
+                phones = re.findall(r'\+91\s?\d{10}', resume_text)
+                if phones:
+                    resume_data['mobile_number'] = phones[0].replace(' ', '')
+                else:
+                    phones = re.findall(r'\b\d{10}\b', resume_text)
+                    if phones:
+                        resume_data['mobile_number'] = phones[0]
+            
+            # 🔥🔥🔥 SKILLS SAFETY CHECK 🔥🔥🔥
+            # Agar skills mein sirf 1-2 items hain ya "Not Specified" hai toh manually extract karein
+            if len(resume_data['skills']) < 3 or resume_data['skills'] == ['Not Specified'] or resume_data['skills'] == ['C', 'R']:
+                st.warning("⚠️ Parser ne kam skills detect kiye. Manual extraction try kar raha hoon...")
+                
+                # Skills section dhoondhein
+                lines = resume_text.split('\n')
+                manual_skills = []
+                
+                for i, line in enumerate(lines):
+                    line_lower = line.lower()
+                    # Skills section find karein
+                    if any(x in line_lower for x in ['skills', 'technical skills', 'technologies']):
+                        # Agle 5 lines check karein
+                        for j in range(1, 6):
+                            if i + j < len(lines):
+                                skill_line = lines[i + j]
+                                # Comma, semicolon, ya colon se split karein
+                                parts = re.split(r'[,;:\|]', skill_line)
+                                for part in parts:
+                                    clean_skill = part.strip()
+                                    # Minimum 2 chars, maximum 30 chars (realistic skill name)
+                                    if 2 <= len(clean_skill) <= 30:
+                                        # Sirf letters, numbers, dots, plus, hash allowed
+                                        if re.match(r'^[A-Za-z0-9\s\.\+\#\-]+$', clean_skill):
+                                            # Common fake skills exclude karein
+                                            if clean_skill.lower() not in ['and', 'or', 'the', 'to', 'of', 'in', 'for', 'with', 'using', 'c', 'r']:
+                                                if clean_skill not in manual_skills:
+                                                    manual_skills.append(clean_skill)
+                
+                if len(manual_skills) >= 3:
+                    resume_data['skills'] = manual_skills
+                    st.success(f"✅ Manual extraction se {len(manual_skills)} skills mile!")
+                else:
+                    # Last resort: Resume text mein common skills dhoondhein
+                    common_skills_list = [
+                        'JavaScript', 'React', 'Node.js', 'MongoDB', 'Express', 'HTML', 'CSS',
+                        'Python', 'Java', 'SQL', 'Git', 'GitHub', 'AWS', 'Docker', 'Figma',
+                        'MERN Stack', 'Full Stack', 'Frontend', 'Backend', 'API', 'Shopify'
+                    ]
+                    found_common = []
+                    text_lower = resume_text.lower()
+                    for cs in common_skills_list:
+                        if cs.lower() in text_lower:
+                            found_common.append(cs)
+                    if found_common:
+                        resume_data['skills'] = found_common
+            
+            # 🔥🔥🔥 END OF FIX 🔥🔥🔥
+            
             if resume_data:
                 ## Get the whole resume data
-                resume_text = pdf_reader(save_image_path)
-
                 st.header("**Resume Analysis**")
                 st.success("Hello "+ resume_data['name'])
                 st.subheader("**Your Basic info**")
@@ -203,7 +330,8 @@ def run():
                 ##  keywords
                 ds_keyword = ['tensorflow','keras','pytorch','machine learning','deep Learning','flask','streamlit']
                 web_keyword = ['react', 'django', 'node jS', 'react js', 'php', 'laravel', 'magento', 'wordpress',
-                               'javascript', 'angular js', 'c#', 'flask']
+                               'javascript', 'angular js', 'c#', 'flask', 'mern', 'full stack', 'frontend', 'backend',
+                               'html', 'css', 'express', 'mongodb', 'shopify']
                 android_keyword = ['android','android development','flutter','kotlin','xml','kivy']
                 ios_keyword = ['ios','ios development','swift','cocoa','cocoa touch','xcode']
                 uiux_keyword = ['ux','adobe xd','figma','zeplin','balsamiq','ui','prototyping','wireframes','storyframes','adobe photoshop','photoshop','editing','adobe illustrator','illustrator','adobe after effects','after effects','adobe premier pro','premier pro','adobe indesign','indesign','wireframe','solid','grasp','user research','user experience']
@@ -230,7 +358,7 @@ def run():
                         print(i.lower())
                         reco_field = 'Web Development'
                         st.success("** Our analysis says you are looking for Web Development Jobs **")
-                        recommended_skills = ['React','Django','Node JS','React JS','php','laravel','Magento','wordpress','Javascript','Angular JS','c#','Flask','SDK']
+                        recommended_skills = ['React','Django','Node JS','React JS','php','laravel','Magento','wordpress','Javascript','Angular JS','c#','Flask','SDK','MERN Stack','Express','MongoDB']
                         recommended_keywords = st_tags(label='### Recommended skills for you.',
                         text='Recommended skills generated from System',value=recommended_skills,key = '3')
                         st.markdown('''<h4 style='text-align: left; color: #1ed760;'>Adding this skills to resume will boost🚀 the chances of getting a Job💼</h4>''',unsafe_allow_html=True)
@@ -282,12 +410,18 @@ def run():
 
                 ### Resume writing recommendation
                 st.subheader("**Resume Tips & Ideas💡**")
+                st.markdown("""
+<div style="background-color: #262730; padding: 10px; border-radius: 5px;">
+    <p style="color: #FF4B4B;">[-] Please add your career objective...</p>
+    <p style="color: #00FF00;">[+] Awesome! You have added your Hobbies</p>
+</div>
+""", unsafe_allow_html=True)
                 resume_score = 0
                 if 'Objective' in resume_text:
                     resume_score = resume_score+20
                     st.markdown('''<h5 style='text-align: left; color: #1ed760;'>[+] Awesome! You have added Objective</h4>''',unsafe_allow_html=True)
                 else:
-                    st.markdown('''<h5 style='text-align: left; color: #000000;'>[-] Please add your career objective, it will give your career intension to the Recruiters.</h4>''',unsafe_allow_html=True)
+                    st.markdown('<p style="color:White;">[+] Please add your career objective...</p>', unsafe_allow_html=True)
 
                 if 'Declaration'  in resume_text:
                     resume_score = resume_score + 20
